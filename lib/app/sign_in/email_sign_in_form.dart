@@ -35,6 +35,15 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
     FocusScope.of(context).requestFocus(newFocus);
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+  }
+
   void _submit() async {
     setState(() {
       _submitted = true;
