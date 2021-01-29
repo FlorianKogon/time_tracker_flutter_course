@@ -26,6 +26,7 @@ class SignInBloc {
     }
   }
 
+
   Future<User> signInWithGoogle() async => await _signIn(authBase.signInWithGoogle);
   Future<User> signInWithFacebook() async => await _signIn(authBase.signInWithFacebook);
   Future<User> signInAnonymously() async => await _signIn(authBase.signInAnonymously);
