@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:time_tracker_flutter_course/app/sign_in/validators.dart';
 import 'package:time_tracker_flutter_course/common_widgets/form_submit_button.dart';
 import 'package:time_tracker_flutter_course/common_widgets/show_alert_dialog.dart';
-import 'package:time_tracker_flutter_course/services/auth_provider.dart';
+import 'package:time_tracker_flutter_course/services/auth.dart';
 
 enum EmailSignInFormType { signIn, register }
 
 class EmailSignInForm extends StatefulWidget with EmailAndPasswordValidators {
-
   @override
   _EmailSignInFormState createState() => _EmailSignInFormState();
 }
@@ -40,7 +40,10 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       _isLoading = true;
     });
     try {
-      final authBase = AuthProvider.of(context);
+      final authBase = Provider.of<AuthBase>(
+        context,
+        listen: false,
+      );
       if (_formType == EmailSignInFormType.signIn) {
         await authBase.signInWithEmailAndPassword(_email, _password);
       } else {
@@ -48,10 +51,11 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       }
       Navigator.of(context).pop();
     } catch (e) {
-      showAlertDialog(context,
-          title: 'Sign in failed',
-          content: e.toString(),
-          defaultActionText: 'OK',
+      showAlertDialog(
+        context,
+        title: 'Sign in failed',
+        content: e.toString(),
+        defaultActionText: 'OK',
       );
     } finally {
       setState(() {
