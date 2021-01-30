@@ -9,19 +9,19 @@ import 'package:time_tracker_flutter_course/services/auth.dart';
 import 'email_sign_in_model.dart';
 
 class EmailSignInFormBlocBased extends StatefulWidget {
-
   EmailSignInFormBlocBased({@required this.bloc});
   final EmailSignInBloc bloc;
 
   static Widget create(BuildContext context) {
     final authBase = Provider.of<AuthBase>(context, listen: false);
     return Provider<EmailSignInBloc>(
-      create: (_) => EmailSignInBloc(authBase: authBase),
-      dispose: (_, bloc) => bloc.dispose(),
-      child: Consumer<EmailSignInBloc>(
-        builder: (_, bloc, __) => EmailSignInFormBlocBased(bloc: bloc,),
-      )
-    );
+        create: (_) => EmailSignInBloc(authBase: authBase),
+        dispose: (_, bloc) => bloc.dispose(),
+        child: Consumer<EmailSignInBloc>(
+          builder: (_, bloc, __) => EmailSignInFormBlocBased(
+            bloc: bloc,
+          ),
+        ));
   }
 
   @override
@@ -103,7 +103,7 @@ class _EmailSignInFormBlocBasedState extends State<EmailSignInFormBlocBased> {
       decoration: InputDecoration(
         labelText: 'Email',
         hintText: 'test@test.com',
-        errorText: model.passwordErrorText,
+        errorText: model.emailErrorText,
         enabled: !model.isLoading,
       ),
       autocorrect: false,
@@ -121,7 +121,7 @@ class _EmailSignInFormBlocBasedState extends State<EmailSignInFormBlocBased> {
       focusNode: _passwordFocusNode,
       decoration: InputDecoration(
         labelText: 'Password',
-        errorText: model.emailErrorText,
+        errorText: model.passwordErrorText,
         enabled: !model.isLoading,
       ),
       obscureText: true,
@@ -134,19 +134,18 @@ class _EmailSignInFormBlocBasedState extends State<EmailSignInFormBlocBased> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<EmailSignInModel>(
-      stream: widget.bloc.modelStream,
-      initialData: EmailSignInModel(),
-      builder: (context, snapshot) {
-        final EmailSignInModel model = snapshot.data;
-        return Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: _buildChildren(model),
-          ),
-        );
-      }
-    );
+        stream: widget.bloc.modelStream,
+        initialData: EmailSignInModel(),
+        builder: (context, snapshot) {
+          final EmailSignInModel model = snapshot.data;
+          return Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: _buildChildren(model),
+            ),
+          );
+        });
   }
 }

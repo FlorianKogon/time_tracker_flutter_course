@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:time_tracker_flutter_course/app/sign_in/email_sign_in_model.dart';
 import 'package:time_tracker_flutter_course/services/auth.dart';
 
@@ -30,7 +30,7 @@ class EmailSignInBloc {
   }
 
   void updateEmail(String email) => updateWithMethod(email: email);
-  void updatePassword(String password) => updateWithMethod(email: password);
+  void updatePassword(String password) => updateWithMethod(password: password);
 
   void updateWithMethod({
     String email,
