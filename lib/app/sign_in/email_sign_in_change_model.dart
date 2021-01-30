@@ -1,36 +1,67 @@
+import 'package:flutter/foundation.dart';
 import 'package:time_tracker_flutter_course/app/sign_in/validators.dart';
+import 'package:time_tracker_flutter_course/services/auth.dart';
+import 'email_sign_in_model.dart';
 
-enum EmailSignInFormType { signIn, register }
-
-class EmailSignInModel with EmailAndPasswordValidators {
-  EmailSignInModel({
+class EmailSignInChangeModel with EmailAndPasswordValidators, ChangeNotifier {
+  EmailSignInChangeModel({
+    @required this.authBase,
     this.email = '',
     this.password = '',
     this.formType = EmailSignInFormType.signIn,
     this.isLoading = false,
     this.submitted = false,
   });
+  final AuthBase authBase;
+  String email;
+  String password;
+  EmailSignInFormType formType;
+  bool isLoading;
+  bool submitted;
 
-  final String email;
-  final String password;
-  final EmailSignInFormType formType;
-  final bool isLoading;
-  final bool submitted;
+  Future<void> submit() async {
+    updateWithMethod(submitted: true, isLoading: true);
+    try {
+      if (formType == EmailSignInFormType.signIn) {
+        await authBase.signInWithEmailAndPassword(email, password);
+      } else {
+        await authBase.createUserWithEmailAndPassword(email, password);
+      }
+    }  catch (e) {
+      updateWithMethod(isLoading: false);
+      rethrow;
+    }
+  }
 
-  EmailSignInModel copyWith(
+  void toggleFormType() {
+    final formType = this.formType == EmailSignInFormType.signIn ?
+    EmailSignInFormType.register :
+    EmailSignInFormType.signIn;
+    updateWithMethod(
+      email: '',
+      password: '',
+      formType: formType,
+      submitted: false,
+      isLoading: false,
+    );
+  }
+
+  void updateEmail(String email) => updateWithMethod(email: email);
+  void updatePassword(String password) => updateWithMethod(password: password);
+
+  void updateWithMethod({
     String email,
     String password,
     EmailSignInFormType formType,
     bool isLoading,
     bool submitted,
-  ) {
-    return EmailSignInModel(
-      email: email ?? this.email,
-      password: password ?? this.password,
-      formType: formType ?? this.formType,
-      isLoading: isLoading ?? this.isLoading,
-      submitted: submitted ?? this.submitted,
-    );
+  }) {
+      this.email = email ?? this.email;
+      this.password = password ?? this.password;
+      this.formType = formType ?? this.formType;
+      this.isLoading = isLoading ?? this.isLoading;
+      this.submitted = submitted ?? this.submitted;
+      notifyListeners();
   }
 
   String get primaryButtonText {
