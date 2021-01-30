@@ -18,21 +18,22 @@ class FirestoreDatabase implements Database {
         job.toMap(),
       );
 
-  Stream<List<Job>> jobsStream() {
-    final path = APIPath.jobs(uid);
-    final reference = FirebaseFirestore.instance.collection(path);
-    final snapshots = reference.snapshots();
-    return snapshots.map((event) => event.docs.map((e) {
-          final data = e.data();
-          return data != null
-              ? Job(name: data['name'], ratePerHour: data['ratePerHour'])
-              : null;
-        }).toList());
-  }
+  Stream<List<Job>> jobsStream() => _collectionStream(
+        path: APIPath.jobs(uid),
+        builder: (data) => Job.fromMap(data),
+      );
 
   Future<void> _setData(String path, Map<String, dynamic> data) async {
     final reference = FirebaseFirestore.instance.doc(path);
-    print('$path: $data');
     await reference.set(data);
+  }
+
+  Stream<List<T>> _collectionStream<T>(
+      {@required String path,
+      @required T Function(Map<String, dynamic> data) builder}) {
+    final reference = FirebaseFirestore.instance.collection(path);
+    final snapshots = reference.snapshots();
+    return snapshots.map(
+        (event) => event.docs.map((event) => builder(event.data())).toList());
   }
 }
