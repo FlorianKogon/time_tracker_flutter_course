@@ -1,17 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:time_tracker_flutter_course/app/sign_in/validators.dart';
 import 'package:time_tracker_flutter_course/common_widgets/form_submit_button.dart';
 import 'package:time_tracker_flutter_course/common_widgets/show_exception_alert_dialog.dart';
 import 'package:time_tracker_flutter_course/services/auth.dart';
+import 'email_sign_in_model.dart';
 
-enum EmailSignInFormType { signIn, register }
-
-class EmailSignInFormStateful extends StatefulWidget with EmailAndPasswordValidators {
+class EmailSignInFormStateful extends StatefulWidget
+    with EmailAndPasswordValidators {
   @override
-  _EmailSignInFormStatefulState createState() => _EmailSignInFormStatefulState();
+  _EmailSignInFormStatefulState createState() =>
+      _EmailSignInFormStatefulState();
 }
 
 class _EmailSignInFormStatefulState extends State<EmailSignInFormStateful> {
@@ -44,16 +45,13 @@ class _EmailSignInFormStatefulState extends State<EmailSignInFormStateful> {
     _passwordController.dispose();
   }
 
-  void _submit() async {
+  Future<void> _submit() async {
     setState(() {
-      _submitted = true;
       _isLoading = true;
+      _submitted = true;
     });
+    final authBase = Provider.of<AuthBase>(context);
     try {
-      final authBase = Provider.of<AuthBase>(
-        context,
-        listen: false,
-      );
       if (_formType == EmailSignInFormType.signIn) {
         await authBase.signInWithEmailAndPassword(_email, _password);
       } else {
