@@ -24,8 +24,10 @@ class FirestoreDatabase implements Database {
     final snapshots = reference.snapshots();
     return snapshots.map((event) => event.docs.map((e) {
           final data = e.data();
-          return data != null ? Job(name: data['name'], ratePerHour: data['ratePerHour']) : null;
-        }));
+          return data != null
+              ? Job(name: data['name'], ratePerHour: data['ratePerHour'])
+              : null;
+        }).toList());
   }
 
   Future<void> _setData(String path, Map<String, dynamic> data) async {
