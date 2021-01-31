@@ -5,35 +5,11 @@ import 'package:time_tracker_flutter_course/app/home/job_entries/job_entries_pag
 import 'package:time_tracker_flutter_course/app/home/jobs/job_list_tile.dart';
 import 'package:time_tracker_flutter_course/app/home/jobs/list_items_builder.dart';
 import 'package:time_tracker_flutter_course/app/home/models/job.dart';
-import 'package:time_tracker_flutter_course/common_widgets/show_alert_dialog.dart';
 import 'package:time_tracker_flutter_course/common_widgets/show_exception_alert_dialog.dart';
-import 'package:time_tracker_flutter_course/services/auth.dart';
 import 'package:time_tracker_flutter_course/services/database.dart';
 import 'edit_job_page.dart';
 
 class JobsPage extends StatelessWidget {
-  Future<void> _signOut(BuildContext context) async {
-    try {
-      final authBase = Provider.of<AuthBase>(
-        context,
-        listen: false,
-      );
-      await authBase.signOut();
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
-  Future<void> _confirmSignOut(BuildContext context) async {
-    final didRequestSignOut = await showAlertDialog(
-      context,
-      title: 'Logout',
-      content: 'Are you sure that you want to logout ?',
-      defaultActionText: 'Logout',
-      cancelActionText: 'Cancel',
-    );
-    if (didRequestSignOut == true) _signOut(context);
-  }
 
   Future<void> _delete(BuildContext context, Job job) async {
     try {
