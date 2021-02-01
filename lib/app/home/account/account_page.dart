@@ -6,7 +6,6 @@ import 'package:time_tracker_flutter_course/common_widgets/show_alert_dialog.dar
 import 'package:time_tracker_flutter_course/services/auth.dart';
 
 class AccountPage extends StatelessWidget {
-
   Future<void> _signOut(BuildContext context) async {
     try {
       final authBase = Provider.of<AuthBase>(
@@ -30,11 +29,27 @@ class AccountPage extends StatelessWidget {
     if (didRequestSignOut == true) _signOut(context);
   }
 
-
   Widget _buildUserInfo(User currentUser) {
-    return Avatar(
-      photoUrl: currentUser.photoURL,
-      radius: 50,
+    return Column(
+      children: [
+        Avatar(
+          photoUrl: currentUser.photoURL,
+          radius: 50,
+        ),
+        SizedBox(
+          height: 8.0,
+        ),
+        if (currentUser.displayName != null)
+          Text(
+            currentUser.displayName,
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        SizedBox(
+          height: 8.0,
+        ),
+      ],
     );
   }
 
@@ -63,4 +78,3 @@ class AccountPage extends StatelessWidget {
     );
   }
 }
-
